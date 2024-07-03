@@ -1,0 +1,123 @@
+You run in a loop of Thought, Action, PAUSE, Action_Response.
+At the end of the loop you output an Answer.
+
+Use Thought to understand the question you have been asked.
+Use Action to run one of the actions available to you - then return PAUSE.
+Action_Response will be the result of running those actions.
+
+Thought and Action should occur in the same turn.
+
+If you have multiple actions to run, you can run them in consecutive turns.
+
+Your available actions are:
+
+get_response_time:
+Description: Returns the response time of a website in ms, returns -1 if the website is unreachable
+Parameters:
+        url: <class 'str'>
+        Return type: <class 'int'>
+e.g. get_response_time: google.com
+
+get_response_time_ranking:
+Description: Returns the ranking based upon the response time of a website
+Parameters:
+        response_time: <class 'int'>
+        Return type: <class 'int'>
+e.g. get_response_time_ranking: 0.5
+
+
+Example session:
+
+Question: what is the response time ranking for something.com?
+Thought: I should check the response time for the web page first.
+Action:
+
+{
+  "function_name": "get_response_time",
+  "function_params": {
+    "url": "something.com"
+  }
+}
+
+PAUSE
+
+You will be called again with this:
+
+Action_Response: 0.5
+
+Thought: I should now output the response time ranking.
+
+Action:
+
+{
+  "function_name": "get_response_time_ranking",
+  "function_params": {
+    "response_time": 0.5
+  }
+}
+
+PAUSE
+
+You will be called again with this:
+
+Action_Response: 5
+
+You then output:
+
+Answer: The response time rank for something.com is 5th rank.
+
+Available actions:  dict_keys(['get_response_time', 'get_response_time_ranking'])
+Starting conversation...
+Loop: 1
+-------------------------------------------------------------
+Thought: I should check the response times for both youtube.com and google.com before I can compare their ranks.
+Action:
+{
+  "function_name": "get_response_time",
+  "function_params": {
+    "url": "youtube.com"
+  }
+}
+ -- running get_response_time {'url': 'youtube.com'}
+Action_Response: 6.005048751831055
+Loop: 2
+-------------------------------------------------------------
+Thought: Now that I have the response time for youtube.com, I will get the response time for google.com.
+Action:
+{
+  "function_name": "get_response_time",
+  "function_params": {
+    "url": "google.com"
+  }
+}
+ -- running get_response_time {'url': 'google.com'}
+Action_Response: 6.502628326416016
+Loop: 3
+-------------------------------------------------------------
+Thought: Now that I have the response times for both websites, I should find out their response time rankings.
+
+Action:
+
+{
+  "function_name": "get_response_time_ranking",
+  "function_params": {
+    "response_time": 6.005048751831055
+  }
+}
+ -- running get_response_time_ranking {'response_time': 6.005048751831055}
+Action_Response: 1
+Loop: 4
+-------------------------------------------------------------
+Thought: Now that I have the response time rank for youtube.com, I will get the response time rank for google.com.
+Action:
+{
+  "function_name": "get_response_time_ranking",
+  "function_params": {
+    "response_time": 6.502628326416016
+  }
+}
+ -- running get_response_time_ranking {'response_time': 6.502628326416016}
+Action_Response: 1
+Loop: 5
+-------------------------------------------------------------
+Answer: The response time rank for youtube.com is 1st rank and for google.com is also 1st rank.
